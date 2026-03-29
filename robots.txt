@@ -1,0 +1,24 @@
+# Robots.txt for Ibrahim Karam's Portfolio
+
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Specify sitemap location
+Sitemap: https://your-portfolio-url.com/sitemap.xml
+
+# Crawl delay (optional - adjust based on server capacity)
+Crawl-delay: 1
+
+# Disallow certain paths if needed
+# Disallow: /admin/
+# Disallow: /private/
+
+# Standard bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
