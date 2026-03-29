@@ -1,6 +1,88 @@
 'use strict';
 
+/**
+ * Theme Toggle Functionality
+ */
+const themeToggle = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+const themeIcon = document.querySelector('.theme-icon');
 
+// Initialize theme from localStorage
+const savedTheme = localStorage.getItem('theme') || 'dark-theme';
+htmlElement.classList.add(savedTheme);
+updateThemeIcon(savedTheme);
+
+function updateThemeIcon(theme) {
+  if (themeIcon) {
+    themeIcon.setAttribute('name', theme === 'light-theme' ? 'sunny-outline' : 'moon-outline');
+  }
+}
+
+// Theme toggle event listener
+if (themeToggle) {
+  themeToggle.addEventListener('click', function () {
+    const currentTheme = htmlElement.classList.contains('light-theme') ? 'light-theme' : 'dark-theme';
+    const newTheme = currentTheme === 'light-theme' ? 'dark-theme' : 'light-theme';
+    
+    htmlElement.classList.remove(currentTheme);
+    htmlElement.classList.add(newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+  });
+}
+
+/**
+ * Smooth Scrolling
+ */
+document.documentElement.style.scrollBehavior = 'smooth';
+
+/**
+ * Scroll Animation Observer
+ */
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animation = 'slideInUp 0.6s ease-out forwards';
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+// Observe service items
+document.querySelectorAll('.service-item').forEach(item => {
+  observer.observe(item);
+});
+
+// Observe timeline items
+document.querySelectorAll('.timeline-item').forEach(item => {
+  observer.observe(item);
+});
+
+/**
+ * Skill Progress Animation
+ */
+function animateSkillBars() {
+  const skillItems = document.querySelectorAll('.skills-item');
+  
+  skillItems.forEach(item => {
+    const progressFill = item.querySelector('.skill-progress-fill');
+    const dataValue = progressFill.style.width;
+    
+    if (dataValue) {
+      progressFill.style.setProperty('--progress-value', dataValue);
+      progressFill.style.width = '0';
+      
+      setTimeout(() => {
+        progressFill.style.animation = 'fillProgress 1.5s ease-out forwards';
+      }, 100);
+    }
+  });
+}
 
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
@@ -149,6 +231,11 @@ for (let i = 0; i < navigationLinks.length; i++) {
         pages[i].classList.add("active");
         navigationLinks[i].classList.add("active");
         window.scrollTo(0, 0);
+        
+        // Trigger skill bar animation when resume page opens
+        if (pages[i].dataset.page === "resume") {
+          setTimeout(() => animateSkillBars(), 200);
+        }
       } else {
         pages[i].classList.remove("active");
         navigationLinks[i].classList.remove("active");
